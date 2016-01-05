@@ -15,7 +15,7 @@ class GitCmd:
         return [f for f in os.listdir(self.dir) if f.endswith('.git') and os.path.isdir(self.dir + '/' + f)]
 
     def add_git_repo(self, name):
-        if name in self.list_git_repos():
+        if ('%s.git' % name) in self.list_git_repos():
             raise ValueError('Name duplicated!')
         os.mkdir(self.__get_repo_path(name))
         p = subprocess.Popen(['git', 'init', '--bare'], cwd=self.__get_repo_path(name))
