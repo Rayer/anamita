@@ -1,4 +1,6 @@
 import os
+import shutil
+import subprocess
 
 
 class GitCmd:
@@ -16,17 +18,26 @@ class GitCmd:
         if name in self.list_git_repos():
             raise ValueError('Name duplicated!')
         os.mkdir(self.__get_repo_path(name))
+        p = subprocess.Popen(['git', 'init', '--bare'], cwd=self.__get_repo_path(name))
+        p.communicate()
+        p.wait()
 
     def del_git_repo(self, name):
-        if name not in self.list_git_repos():
+        if (name + '.git') not in self.list_git_repos():
             raise ValueError('Repository is not found')
+        # os.rmdir(self.__get_repo_path(name))
+        shutil.rmtree(self.__get_repo_path(name))
 
-        os.rmdir(self.__get_repo_path(name))
+    def get_ssh_public_keys(self):
+        pass
+
+    def set_ssh_public_keys(self, keyslot):
+        pass
 
 
 if __name__ == '__main__':
-    g = GitCmd('/opt/git/')
-    g.list_git_repos()
-    g.add_git_repo('AAA')
-    g.del_git_repo('AAA')
-    pass
+    g = GitCmd('/home/rayer/test_git/')
+    print(g.list_git_repos())
+
+    for c in xrange(0, 200, 2):
+        print(g.del_git_repo('test-git-repo-%d' % c))
